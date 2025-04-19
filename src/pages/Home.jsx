@@ -1,27 +1,57 @@
-import React from "react";
-import { useEvent } from "../events/EventContext";
-import "./Home.css";
+import React from 'react';
+import Particles from 'react-tsparticles';
+import { loadFull } from 'tsparticles';
+import './Home.css';
 
 export default function Home() {
-  const { events } = useEvent();
+  const particlesInit = async (engine) => {
+    // Loads the full tsparticles package, which includes all presets and shapes
+    await loadFull(engine);
+  };
 
   return (
-    <div className="container">
+    <div className="home-container">
+      {/* Particles Background */}
+      <Particles
+        id="tsparticles"
+        init={particlesInit}
+        options={{
+          fullScreen: { enable: false },
+          background: { color: { value: "#0a192f" } },
+          fpsLimit: 60,
+          interactivity: {
+            events: {
+              onClick: { enable: true, mode: "push" },
+              onHover: { enable: true, mode: "repulse" },
+              resize: true,
+            },
+            modes: {
+              push: { quantity: 4 },
+              repulse: { distance: 100, duration: 0.4 },
+            },
+          },
+          particles: {
+            color: { value: "#ffffff" },
+            links: { color: "#ffffff", distance: 150, enable: true, opacity: 0.5, width: 1 },
+            collisions: { enable: true },
+            move: { direction: "none", enable: true, outModes: { default: "bounce" }, random: false, speed: 1.5, straight: false },
+            number: { density: { enable: true, area: 800 }, value: 80 },
+            opacity: { value: 0.5 },
+            shape: { type: "circle" },
+            size: { value: { min: 1, max: 3 } },
+          },
+          detectRetina: true,
+        }}
+      />
 
-      <h3>📅 Upcoming Events</h3>
-      <div className="event-list">
-        {events.length === 0 ? (
-          <p>No upcoming events yet.</p>
-        ) : (
-          events.map((event, index) => (
-            <div key={index} className="card">
-              <h4>{event.title}</h4>
-              <p><strong>Date:</strong> {event.date}</p>
-              <p><strong>Location:</strong> {event.location}</p>
-              <p><strong>Description:</strong> {event.description}</p>
-            </div>
-          ))
-        )}
+      {/* Hero Content */}
+      <div className="hero-content">
+        <h1 className="hero-title">Welcome to Event Planner</h1>
+        <p className="hero-desc">
+          Your one-stop platform for creating, organizing, and celebrating events.
+          Whether you're planning a festival, party, or corporate gathering, we’ve got you covered!
+        </p>
+        <button className="cta-button">Get Started</button>
       </div>
     </div>
   );

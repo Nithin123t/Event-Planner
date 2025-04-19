@@ -7,20 +7,20 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+      includeAssets: ['favicon.svg', 'logo192.png'],
       manifest: {
         name: 'Event Planning App',
-        short_name: 'Events',
-        description: 'Plan, RSVP, and explore awesome events!',
+        short_name: 'EventApp',
+        description: 'Plan and manage events with ease!',
         theme_color: '#ffffff',
         icons: [
           {
-            src: 'pwa-192x192.png',
+            src: 'logo192.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: 'pwa-512x512.png',
+            src: 'logo512.png',
             sizes: '512x512',
             type: 'image/png',
           },
@@ -28,4 +28,5 @@ export default defineConfig({
       },
     }),
   ],
+  base: '/event-planning-app/', // important for GitHub Pages
 });
