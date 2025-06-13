@@ -42,4 +42,4 @@
 ## Notes
 
 - Make sure your GitHub repository is public or you have connected your GitHub account to Vercel with appropriate permissions.
-- The `vercel.json` file in the project root configures the build and output directory for Vercel.
+- The `vercel.json` file in the project root is optional. If present, it may override the build and development settings defined in your Vercel project settings. You can remove or simplify this file if you prefer to manage build settings via the Vercel UI.
