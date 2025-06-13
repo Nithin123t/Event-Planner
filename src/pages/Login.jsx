@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useAuth } from "../auth/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import "./Auth.css";
 
 export default function Login() {
   const { login } = useAuth();
@@ -12,32 +14,51 @@ export default function Login() {
     e.preventDefault();
     const res = login(form.email, form.password);
     if (res.success) {
-      navigate("/create");
+      toast.success("🎉 Login successful!");
+      navigate("/");
     } else {
       setError(res.message);
+      toast.error("❌ " + res.message);
     }
   };
 
   return (
-    <div className="container">
+    <div className="auth-container">
       <h2>Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          required
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-        /><br />
-        <input
-          type="password"
-          placeholder="Password"
-          required
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-        /><br />
-        <button className="btn" type="submit">Login</button>
+      <form onSubmit={handleSubmit} className="auth-form">
+        {error && <div className="error-message">{error}</div>}
+        
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="Enter your email"
+            required
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            placeholder="Enter your password"
+            required
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+          />
+        </div>
+
+        <button className="submit-button" type="submit">
+          Login
+        </button>
+
+        <div className="auth-link">
+          Don't have an account? <Link to="/register">Register here</Link>
+        </div>
       </form>
     </div>
   );

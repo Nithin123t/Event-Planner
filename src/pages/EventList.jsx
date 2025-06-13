@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { useEvent } from "../events/EventContext";
 import { useAuth } from "../auth/AuthContext";
+import NotificationToggle from "../components/NotificationToggle";
 import "./EventList.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function EventList() {
-  const { events, deleteEvent, updateEvent } = useEvent();
+  const { events, deleteEvent, updateEvent, handleRSVP, getUserRSVP } = useEvent();
   const { user } = useAuth();
   const [editIndex, setEditIndex] = useState(null);
   const [editedData, setEditedData] = useState({});
-  const [rsvps, setRsvps] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
 
   const startEdit = (index, event) => {
@@ -34,22 +34,9 @@ export default function EventList() {
     }
   };
 
-  const handleRSVP = (eventId, status) => {
-    setRsvps((prev) => {
-      const current = prev[eventId] || [];
-      const updated = [
-        ...current.filter((r) => r.user !== user?.email),
-        { user: user?.email, status },
-      ];
-      return { ...prev, [eventId]: updated };
-    });
+  const handleRSVPClick = (eventId, status) => {
+    handleRSVP(eventId, status);
     toast.info(`You marked: ${status}`);
-  };
-
-  const getUserRSVP = (eventId) => {
-    const responses = rsvps[eventId] || [];
-    const userResponse = responses.find((r) => r.user === user?.email);
-    return userResponse?.status || "No response";
   };
 
   const calculateTotalStats = () => {
@@ -58,11 +45,10 @@ export default function EventList() {
       noResponse = 0;
 
     filteredEvents.forEach((event) => {
-      const responses = rsvps[event.id] || [];
-      const hasResponse = responses.find((r) => r.user === user?.email);
-
-      if (hasResponse?.status === "Going") going++;
-      else if (hasResponse?.status === "Not Going") notGoing++;
+      const userRsvp = getUserRSVP(event.id);
+      
+      if (userRsvp === "Going") going++;
+      else if (userRsvp === "Not Going") notGoing++;
       else noResponse++;
     });
 
@@ -81,6 +67,8 @@ export default function EventList() {
   return (
     <div className="event-list-container">
       <h2>All Events</h2>
+
+      {user && <NotificationToggle />}
 
       <div className="search-container">
         <input
@@ -166,13 +154,13 @@ export default function EventList() {
                     <div className="rsvp-section">
                       <span>RSVP: </span>
                       <button
-                        onClick={() => handleRSVP(event.id, "Going")}
+                        onClick={() => handleRSVPClick(event.id, "Going")}
                         className="rsvp-btn going"
                       >
                         ✅ Going
                       </button>
                       <button
-                        onClick={() => handleRSVP(event.id, "Not Going")}
+                        onClick={() => handleRSVPClick(event.id, "Not Going")}
                         className="rsvp-btn not-going"
                       >
                         ❌ Not Going

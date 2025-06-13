@@ -1,12 +1,25 @@
 import React from 'react';
 import Particles from 'react-tsparticles';
 import { loadFull } from 'tsparticles';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext';
 import './Home.css';
 
 export default function Home() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
   const particlesInit = async (engine) => {
     // Loads the full tsparticles package, which includes all presets and shapes
     await loadFull(engine);
+  };
+
+  const handleGetStarted = () => {
+    if (user) {
+      navigate('/create');
+    } else {
+      navigate('/login');
+    }
   };
 
   return (
@@ -51,7 +64,9 @@ export default function Home() {
           Your one-stop platform for creating, organizing, and celebrating events.
           Whether you're planning a festival, party, or corporate gathering, we’ve got you covered!
         </p>
-        <button className="cta-button">Get Started</button>
+        <button className="cta-button" onClick={handleGetStarted}>
+          Get Started
+        </button>
       </div>
     </div>
   );
